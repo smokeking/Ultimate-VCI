@@ -1,8 +1,24 @@
-[HKEY_LOCAL_MACHINE\SOFTWARE\PassThruSupport.04.04\Gelderblom_VCI]
+Windows Registry Editor Version 5.00
+
+; EG Ultimate VCI by Gelderblom - COM Port Limit and Legacy App Override
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\COM Name Arbiter]
+"ComDB"=hex:ff,ff,ff,ff,00,00,00,00,00,00,00,00,00,00,00,00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\PassThruSupport.04.04\EG_VCI_Gelderblom]
 "Name"="EG Ultimate VCI"
 "Vendor"="Gelderblom"
-"FunctionLibrary"="C:\Windows\System32\slcan-j2534.dll"
+"ConfigApplication"=""
+"FunctionLibrary"="C:\\Windows\\System32\\slcan.dll"
 "CAN"=dword:00000001
 "ISO15765"=dword:00000001
 "ISO9141"=dword:00000001
-"ISO14230"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\PassThruSupport.04.04\EG_VCI_Gelderblom]
+"Name"="EG Ultimate VCI"
+"Vendor"="Gelderblom"
+"ConfigApplication"=""
+"FunctionLibrary"="C:\\Windows\\System32\\slcan.dll"
+"CAN"=dword:00000001
+"ISO15765"=dword:00000001
+"ISO9141"=dword:00000001
