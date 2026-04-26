@@ -1,0 +1,8 @@
+[HKEY_LOCAL_MACHINE\SOFTWARE\PassThruSupport.04.04\Gelderblom_VCI]
+"Name"="EG Ultimate VCI"
+"Vendor"="Gelderblom"
+"FunctionLibrary"="C:\Windows\System32\slcan-j2534.dll"
+"CAN"=dword:00000001
+"ISO15765"=dword:00000001
+"ISO9141"=dword:00000001
+"ISO14230"=dword:00000001
