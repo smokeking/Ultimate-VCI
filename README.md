@@ -1,48 +1,67 @@
-# 🏎️ LilyGo T-CAN485 Ultimate VCI
+🚀 EG Ultimate VCI by Gelderblom
+A complete, all-in-one vehicle communication interface firmware designed for the LilyGo T-CAN485 development board. This firmware enables your hardware to bridge physical vehicle networks (CAN-Bus and K-Line) to a PC or mobile device via high-speed USB-C, Bluetooth, and WiFi simultaneously.
 
-An open-source, multi-mode Vehicle Communication Interface (VCI) built on the **LilyGo T-CAN485 (ESP32)**. This project emulates professional diagnostic tools (Volvo DiCE, GM MDI, Renault Alliance, VAG HEX-NET) for use with dealer-level software.
+🎯 Key Feature: It includes a live-switching profile engine that spoofs MAC addresses and broadcast names, allowing the hardware to emulate multiple high-end dealer tools.
 
-## 🚀 Features
-- **Multi-Mode Connectivity:** Supports USB-C, WiFi (Access Point), and Bluetooth Serial.
-- **Vendor Spoofing:** Change Bluetooth MAC and Device Name via a web dashboard to trick dealer software.
-- **Dual Protocol:** High-speed CAN-bus (500k/250k) and K-Line (10.4k) support.
-- **Web Dashboard:** On-the-fly profile switching and manual ECU "Wake-up" (5-baud/Fast Init) at `192.168.4.1`.
-- **SLCAN Compatible:** Works natively with **SavvyCAN** and J2534 PassThru wrappers.
+⚡ Features
+Tri-Interface Bridging: Streams diagnostic data simultaneously over USB-C (Serial), Bluetooth Serial, and WiFi TCP (Port 35000).
 
-## 🛠️ Hardware Setup
-### 1. CAN-Bus
-Uses the onboard SN65HVD231 transceiver.
-- **CAN_H:** OBD2 Pin 6
-- **CAN_L:** OBD2 Pin 14
+Dealer Tool Emulation: Built-in profiles with unique MAC addresses and names to satisfy strict vendor software checks.
 
-### 2. K-Line Shifter (Required for Older Cars)
-Since the ESP32 is 3.3V and K-Line is 12V, we need a simple transistor level shifter:
+Web Dashboard: Accessible at http://192.168.4.1 to swap profiles on the fly or fire manual wake-up pulses.
 
-**TX (GPIO 17):** NPN Transistor to pull OBD Pin 7 to GND.
-**RX (GPIO 16):** Voltage divider (22k/10k) to drop 12V K-Line to 3.3V.
+Protocol Support:
+CAN-bus (SLCAN/Lawicel): Standard 250k/500k speeds with ISO-TP flow control handling.
 
-**Pull-up:** 1k Ohm resistor from OBD Pin 7 to 12V.
+K-Line: Traditional 10.4k baud operation with hardware line toggling.
 
-## Software Installation
-1. **Flash Firmware:** Upload the provided `.ino` file to your LilyGo T-CAN485 using the Arduino IDE (Requires `ESPAsyncWebServer` and `AsyncTCP` libraries).
-2. **Install Driver:** 
-   - Download the `slcan-j2534.dll` 
-   - Place it in `C:\Windows\System32\`.
-3. **Registry Fix:** Run the included `vci_registry.reg` file to register the device as a PassThru interface in Windows.
+Manual Wake-up Sequences: Trigger Fast Init and 5-Baud pulses via the web GUI to wake up stubborn legacy ECUs.
 
-## 📱 How to Use
-1. Connect to the WiFi network: **VCI_ULTIMATE_DASH** (Pass: `admin123`).
-2. Open `192.168.4.1` in your browser.
-3. Select your desired vehicle profile (e.g., Renault Talisman or Volvo DiCE).
-4. The device will reboot with the spoofed MAC/Name.
-5. Open your diagnostic software (VIDA, GDS2, VCDS-Lite) and select **LilyGo Ultimate VCI**.
+🚘 Supported Profiles
+Profile Name	Broadcast Identity	Target Ecosystem	Protocol
+EG Volvo DiCE	DiCE-206751	Volvo VIDA	CAN (500k)
+EG Renault Alliance	Alliance-VI	Renault Clip	CAN (500k)
+EG VAG HEX-NET	HEX-NET-V2	VCDS / VagCom	CAN (500k)
+EG GM MDI	MDI-824512	GM GDS2 / Techline	CAN (500k)
+EG BMW ICOM	ICOM-NEXT	BMW ISTA	CAN (500k)
+EG Toyota Techstream	TIS-VCI	Toyota Techstream	CAN (500k)
+EG Ford VCM II	VCM-II-PRO	Ford IDS	CAN (500k)
+EG Renault Legacy	Renault-K	Renault DDT2000	K-Line (10.4k)
+EG VAG K-Line	VAG-KKL	VCDS-Lite	K-Line (10.4k)
+EG Generic OBD2	OBD2-ADAPTER	Generic ELM Apps	CAN (500k)
 
-## 📂 Project Structure
-- `/Firmware`: ESP32 Source code.
-- `/Drivers`: Registry files and J2534 DLLs.
-- `/Hardware`: Wiring diagrams for the K-Line shifter.
+🛠️ Hardware Requirements
+Board: LilyGo T-CAN485 (ESP32-based).
+K-Line Hardware modification:
 
-## 📝 Change Log
-- **v1.2-alpha:** Added Web Dashboard and Manual K-Line Wake-up pulse.
-- **v1.1-alpha:** Added K-Line support and Transistor Shifter logic.
-- **v1.0-alpha:** Initial release with CAN-to-Bluetooth/USB bridge.
+A transistor shifter on Pin 17 (TX) to pull up/down the vehicle's 12V K-Line.
+
+A voltage divider on Pin 16 (RX) to safely read the 12V line at ESP32-friendly 3.3V levels.
+
+💻 Software Setup
+1. Arduino IDE
+Open the Arduino IDE.
+
+Install the ESP32 board package.
+
+Install the following libraries via the Library Manager or GitHub:
+
+ESPAsyncWebServer
+AsyncTCP
+
+Select your ESP32 board and flash the .ino sketch provided in this repository.
+
+3. Windows Registry Fix (.reg)
+Many legacy dealer apps expect to talk to low-index COM ports and require specific keys to recognize third-party PassThru devices.
+
+Double-click the provided VCI_Fix.reg file.
+Merge the file into your registry to clear standard COM limits and register the device under PassThruSupport.04.04.
+
+🕹️ How to Use
+Connect the board to your vehicle's OBD-II port.
+Search for WiFi networks on your phone or PC and connect to EG_Ultimate_VCI (Password: admin123).
+
+Open a browser and navigate to 192.168.4.1.
+Click on your desired profile. The device will save the setting and automatically reboot into its new hardware identity.
+
+If using a K-Line profile, use the red "Trigger Wakeup" button on the web page to initialize communication with the vehicle ECU.
